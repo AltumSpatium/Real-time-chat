@@ -14,7 +14,7 @@ app.get('/', (req, res) => {
     res.sendFile('/index.html')
 })
 
-let clientsCount = 0;
+let clientsCount = 0
 const clients = {}
 
 io.on('connection', socket => {
