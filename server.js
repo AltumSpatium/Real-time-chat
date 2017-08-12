@@ -33,9 +33,31 @@ io.on('connection', socket => {
         clients[clientId] = name
     })
 
-    socket.on('/help', name => {
+    socket.on('/help', () => {
         io.emit('chat message',
             `List of commands: /name, /help`)
+    })
+
+    socket.on('/p', obj => {
+        const name = obj.to
+        const msg = obj.msg
+
+        for (let key in clients) {
+            const n = clients[key]
+            if (n === name) {
+                const id = key
+                io.emit('/p', {
+                    senderId: clientId,
+                    receiverId: id,
+                    senderMsg: `To ${name}: ${msg}`,
+                    receiverMsg: `From ${clients[clientId]}: ${msg}`
+                })
+            }
+        }
+    })
+
+    socket.on('typing', id => {
+        io.emit('typing', clients[id])
     })
 
     socket.on('disconnect', () => {
